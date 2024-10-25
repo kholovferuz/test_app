@@ -1,0 +1,6 @@
+postgres:
+    port: "5443"
+project:
+    name: data-orchestration
+webserver:
+    port: "8092"
