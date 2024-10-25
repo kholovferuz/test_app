@@ -20,7 +20,7 @@ def connect_snowflake():
     """
     try:
         
-        conn = snowflake.connector.connect(
+        conn = sf.connect(
             user=os.getenv('SNOWFLAKE_USER'),
             password=os.getenv('SNOWFLAKE_PASSWORD'),
             account=os.getenv('SNOWFLAKE_ACCOUNT'),
