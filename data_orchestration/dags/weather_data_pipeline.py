@@ -42,24 +42,20 @@ def get_snowflake_connection():
         snowflake.connector.connection: A connection object for the Snowflake database.
     """
 
-    # Retrieve the connection
     connection = BaseHook.get_connection('snowflake_conn')
     
-    # Check if necessary environment variables are available
     snowflake_account = os.getenv('SNOWFLAKE_ACCOUNT')
     snowflake_warehouse = os.getenv('SNOWFLAKE_WAREHOUSE')
     snowflake_database = os.getenv('SNOWFLAKE_DATABASE')
 
-    # Debug logging
+    # debug logging
     print(f"Connecting to Snowflake with account: {connection.host}, user: {connection.login}")
 
     # Error handling for missing credentials
     if not connection.host or not connection.login or not connection.password:
         raise ValueError("Snowflake connection parameters are not fully defined.")
-    if not snowflake_account or not snowflake_warehouse or not snowflake_database:
-        raise ValueError("One or more required environment variables (SNOWFLAKE_ACCOUNT, SNOWFLAKE_WAREHOUSE, SNOWFLAKE_DATABASE) are not set.")
 
-    # Establish connection
+    # establishing connection
     return snowflake.connector.connect(
         user=connection.login,
         password=connection.password,
