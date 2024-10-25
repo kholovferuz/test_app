@@ -266,14 +266,13 @@ def save_denormalized_data_into_bucket(cur):
     previous_day = today - timedelta(days=1)
 
     formatted_previous_day = previous_day.strftime('%Y-%m-%d')  
-    formatted_today=today.strftime('%Y-%m-%d')
     
     cur.execute(f"""
-        COPY INTO @L0_LANDING_AREA.my_external_stage/analysis_data/ad_{formatted_today}/
+        COPY INTO @L0_LANDING_AREA.my_external_stage/analysis_data/ad_{formatted_previous_day}/
         FROM (
             SELECT * 
             FROM weather_db.L2_ANALYSIS.weather_analysis
-            WHERE DATE(OBSERVATION_TIME) = '{today}'
+            WHERE DATE(OBSERVATION_TIME) = '{previous_day}'
         )
         FILE_FORMAT = (TYPE = 'PARQUET')
         OVERWRITE = TRUE;
@@ -285,16 +284,15 @@ def save_raw_data_into_bucket(cur):
     today = datetime.now()
 
     previous_day = today - timedelta(days=1)
-
-    formatted_today=today.strftime('%Y-%m-%d')  
+  
     formatted_previous_day = previous_day.strftime('%Y-%m-%d')  
 
     cur.execute(f"""
-        COPY INTO @L0_LANDING_AREA.my_external_stage/raw_data/rd_{formatted_today}/
+        COPY INTO @L0_LANDING_AREA.my_external_stage/raw_data/rd_{formatted_previous_day}/
         FROM (
             SELECT * 
             FROM WEATHER_DB.L0_LANDING_AREA.RAW_DATA
-            WHERE DATE(OBSERVATION_TIME) = '{today}'
+            WHERE DATE(OBSERVATION_TIME) = '{previous_day}'
         )
         FILE_FORMAT = (TYPE = 'PARQUET')
         OVERWRITE = TRUE;
