@@ -2,7 +2,7 @@ import streamlit as st
 from data_orchestration.dags.modules.api_calls import fetch_current_weather_data, fetch_denormalized_into_df
 from weather_analysis import WeatherAnalysis
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def snowflake_tables(cur):
     """
@@ -199,7 +199,7 @@ def weather_analysis(cur):
 
     # sidebar date filters
     start_date = st.sidebar.date_input("Start Date", value=pd.to_datetime('2024-01-01'))
-    end_date = st.sidebar.date_input("End Date", value=datetime.now())
+    end_date = st.sidebar.date_input("End Date", value=datetime.now() + timedelta(days=1))
     
     # filtering data based on selected date period
     filtered_df = weather_analysis.filter_by_date(start_date, end_date)
