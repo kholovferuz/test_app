@@ -2,7 +2,22 @@ import streamlit as st
 from snowflake_connection import cur
 from pages import snowflake_tables, current_weather, weather_analysis
 from data_orchestration.dags.modules.api_calls import cities_list
+import streamlit as st
+from streamlit_autorefresh import st_autorefresh
 import os
+
+st.set_page_config(
+        page_title="Weather app",
+        page_icon="🌤️",
+        layout="wide")
+
+# Refresh every 2 hours (2 hours = 7200 seconds)
+st_autorefresh(interval=7200 * 1000, key="snowflake_reconnect")
+
+# cached function to load data
+@st.cache_data(ttl=7200)  # caches data for 2 hours
+def load_snowflake_data():
+    return cur
 
 def main():
     """
@@ -21,10 +36,8 @@ def main():
     It initializes the app with a wide layout and a custom page title and icon.
     """
     
-    st.set_page_config(
-        page_title="Weather app",
-        page_icon="🌤️",
-        layout="wide")
+    
+    
     # creating a link for official documentation in sidebar
     st.sidebar.markdown('[Official documentation](http://app-documentation-demo.s3-website.eu-central-1.amazonaws.com/index.html)')
 
