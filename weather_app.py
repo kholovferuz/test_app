@@ -2,14 +2,8 @@ import streamlit as st
 from snowflake_connection import cur
 from pages import snowflake_tables, current_weather, weather_analysis
 from data_orchestration.dags.modules.api_calls import cities_list
-from streamlit_autorefresh import st_autorefresh
 import os
 
-# refreshes every 2 hours (2 hours = 7200 seconds)
-st_autorefresh(interval=7200 * 1000, key="snowflake_reconnect")
-
-# Streamlit App
-@st.cache_data(ttl=7200)  # caches data for two hours
 def main():
     """
     The main function to run the Streamlit Weather App.
