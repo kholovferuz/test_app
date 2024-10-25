@@ -19,14 +19,15 @@ def connect_snowflake():
                                     to connect to Snowflake.
     """
     try:
-        conn = sf.connect(
+        try:
+        conn = snowflake.connector.connect(
             user=os.getenv('SNOWFLAKE_USER'),
             password=os.getenv('SNOWFLAKE_PASSWORD'),
-            account=os.getenv('SNOWFLAKE_ACCOUNT'), 
-            database=os.getenv('SNOWFLAKE_DATABASE'),
-            warehouse=os.getenv('SNOWFLAKE_WAREHOUSE')
+            account=os.getenv('SNOWFLAKE_ACCOUNT'),
+            warehouse=os.getenv('SNOWFLAKE_WAREHOUSE'),
+            database=os.getenv('SNOWFLAKE_DATABASE')
         )
-        print("Connection successful!")
+        print("Snowflake connection established.")
         return conn
     except sf.errors.ProgrammingError as e:
         if e.errno == 390114:
@@ -43,7 +44,6 @@ def connect_snowflake():
 # create a cursor object
 cur=connect_snowflake().cursor()
 
-print(connect_snowflake())
 
 def create_external_stage(aws_key_id, aws_secret_key):
     """
