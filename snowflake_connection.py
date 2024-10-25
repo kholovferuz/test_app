@@ -32,7 +32,6 @@ def connect_snowflake():
     except sf.errors.ProgrammingError as e:
         if e.errno == 390114:
             print("Session expired. Re-authenticating...")
-            # Re-authenticate and reconnect logic here
             conn = sf.connect(
                 user=os.getenv('SNOWFLAKE_USER'),
                 password=os.getenv('SNOWFLAKE_PASSWORD'),
