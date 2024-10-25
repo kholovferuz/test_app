@@ -204,17 +204,17 @@ def weather_analysis(cur):
     # filtering data based on selected date period
     filtered_df = weather_analysis.filter_by_date(start_date, end_date)
 
-    # uUtility function for rendering the result or message
+    # uUtility function for displaying the result or message
     def display_result(result, label):
         st.write(f"#### {label} ")
         if isinstance(result, pd.DataFrame) and not result.empty:
             st.dataframe(result, hide_index=True)
         elif isinstance(result, str):
-            st.write(result)  # Display string message if applicable
+            st.write(result)  
         else:
             st.error("No valid data to display for this analysis.")  
 
-    # Analysis outputs (compact & modularized)
+    # Analysis outputs
     analysis_tasks = [
         ("Distinct weather conditions observed", weather_analysis.distinct_weather_conditions, filtered_df),
         ("Most common weather conditions per city", weather_analysis.rank_common_weather_conditions, filtered_df),
