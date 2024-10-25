@@ -28,7 +28,7 @@ def main():
         page_icon="🌤️",
         layout="wide")
     # creating a link for official documentation in sidebar
-    st.sidebar.markdown('[Official documentation](http://app-documentation-demo.s3-website.eu-central-1.amazonaws.com/snowflake_connection.html)')
+    st.sidebar.markdown('[Official documentation](http://app-documentation-demo.s3-website.eu-central-1.amazonaws.com/index.html)')
 
     selected_page = st.sidebar.selectbox("Select a page", ["Current Weather","Weather Analysis", "Snowflake Tables"])
     if selected_page == "Weather Analysis":
