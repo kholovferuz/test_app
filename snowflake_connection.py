@@ -19,7 +19,7 @@ def connect_snowflake():
                                     to connect to Snowflake.
     """
     try:
-        try:
+        
         conn = snowflake.connector.connect(
             user=os.getenv('SNOWFLAKE_USER'),
             password=os.getenv('SNOWFLAKE_PASSWORD'),
