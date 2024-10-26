@@ -29,8 +29,13 @@ def connect_snowflake():
         )
         print("Snowflake connection established.")
         return conn
-    except sf.errors.ProgrammingError as e:
-        print("Snowflake connection error:",e)
+    except Error as e:
+        if "390114" in str(e):
+            st.warning("Session expired. Re-authenticating...")
+            return get_snowflake_connection()  # Recursive retry
+        else:
+            st.error(f"Error connecting to Snowflake: {e}")
+            return None
 
 # create a cursor object
 cur=connect_snowflake().cursor()
