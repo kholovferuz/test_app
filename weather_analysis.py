@@ -52,36 +52,38 @@ class WeatherAnalysis:
 
     # 2
     def rank_common_weather_conditions(self, filtered_df):
-        """
-        Provides the count of occurrences of different weather conditions grouped by city.
-        Args:
-            filtered_df (pd.DataFrame): The filtered DataFrame.
-        Returns:
-            pd.DataFrame: A DataFrame with the weather condition count grouped by city.
-        """
+    """
+    Provides the most common weather condition for each city based on count.
+    Args:
+        filtered_df (pd.DataFrame): The filtered DataFrame.
+    Returns:
+        pd.DataFrame: A DataFrame with the most common weather condition per city.
+    """
+    if filtered_df.empty:
+        return "No data available for the selected date range"
 
-        if filtered_df.empty:
-            return "No data available for the selected date range"
+    try:
+        # grouping by city and weather condition, count occurrences
+        weather_counts = (filtered_df.groupby(['CITY_NAME', 'WEATHER_CONDITION'])
+                          .size()
+                          .reset_index(name='COUNT'))
 
-        try:
-            # Group by city and weather condition, count occurrences
-            weather_counts = (filtered_df.groupby(['CITY_NAME', 'WEATHER_CONDITION'])
-                            .size()
-                            .reset_index(name='COUNT'))
+        if weather_counts.empty:
+            return "No weather conditions found for the selected date range"
 
-            if weather_counts.empty:
-                return "No weather conditions found for the selected date range"
+        # ranking the weather conditions within each city
+        weather_counts['RANK'] = weather_counts.groupby('CITY_NAME')['COUNT'].rank(method='dense', ascending=False)
 
-            # Rank the weather conditions within each city
-            weather_counts['RANK'] = weather_counts.groupby('CITY_NAME')['COUNT'].rank(method='dense', ascending=False)
+        # filtering for only the most common weather condition per city (rank = 1)
+        top_conditions = weather_counts[weather_counts['RANK'] == 1]
 
-            # Sort the DataFrame by city and rank
-            ranked_conditions = weather_counts.sort_values(by=['CITY_NAME', 'RANK'])
+        # sorting the DataFrame by city for readability
+        top_conditions = top_conditions.sort_values(by=['CITY_NAME'])
 
-            return ranked_conditions
+        return top_conditions
 
-        except Exception as e:
-            return f"An error occurred: {str(e)}"
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
 
     # 3
     def average_temperature(self, filtered_df):
