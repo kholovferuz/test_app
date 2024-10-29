@@ -34,7 +34,8 @@ def connect_snowflake():
         return None
             
 # create a cursor object
-cur=connect_snowflake().cursor()
+conn=connect_snowflake()
+cur=conn.cursor()
 
 # a query to keep the session alive
 while True:
