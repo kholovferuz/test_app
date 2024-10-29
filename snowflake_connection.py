@@ -1,5 +1,6 @@
 import snowflake.connector as sf
 import os
+import time
 
 def connect_snowflake():
     """
