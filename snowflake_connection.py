@@ -38,14 +38,14 @@ def connect_snowflake():
 conn=connect_snowflake()
 cur=conn.cursor()
 
-# a query to keep the session alive
-while True:
-    cur = conn.cursor()
-    cur.execute("SELECT 1") 
-    time.sleep(210 * 60)  
-    cur.close()
+# # a query to keep the session alive
+# while True:
+#     cur = conn.cursor()
+#     cur.execute("SELECT 1") 
+#     time.sleep(210 * 60)  
+#     cur.close()
 
-conn.close()
+# conn.close()
 
 
 def create_external_stage(aws_key_id, aws_secret_key):
