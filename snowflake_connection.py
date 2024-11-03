@@ -48,7 +48,7 @@ def keep_connection_alive(conn, check_interval=3600):
             print("Attempting to reconnect...")
             conn=connect_snowflake()
 
-        sleep(check_interval)
+        time.sleep(check_interval)
 
 connection=connect_snowflake()
 if connection:
