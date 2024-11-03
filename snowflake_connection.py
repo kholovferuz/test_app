@@ -38,21 +38,21 @@ def connect_snowflake():
 conn=connect_snowflake()
 cur=conn.cursor()
 
-def keep_connection_alive(conn, check_interval=3600):
-    while True:
-        try:
-            conn.cursor().execute("select 1")
-            print("Connection is active")
-        except sf.errors.Error as e:
-            print(f"Connection error: {e}")
-            print("Attempting to reconnect...")
-            conn=connect_snowflake()
+# def keep_connection_alive(conn, check_interval=3600):
+#     while True:
+#         try:
+#             conn.cursor().execute("select 1")
+#             print("Connection is active")
+#         except sf.errors.Error as e:
+#             print(f"Connection error: {e}")
+#             print("Attempting to reconnect...")
+#             conn=connect_snowflake()
 
-        time.sleep(check_interval)
+#         time.sleep(check_interval)
 
-connection=connect_snowflake()
-if connection:
-    keep_connection_alive(connection, check_interval=3600)
+# connection=connect_snowflake()
+# if connection:
+#     keep_connection_alive(connection, check_interval=3600)
 # # a query to keep the session alive
 # while True:
 #     cur = conn.cursor()
