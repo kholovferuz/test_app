@@ -15,7 +15,7 @@ st.set_page_config(
 st_autorefresh(interval=7200 * 1000, key="snowflake_reconnect")
 
 # cached function to load data
-@st.cache_data(ttl=7200)  # caches data for 2 hours
+@st.cache_data(ttl=86400)  # caches data for 2 hours
 def load_snowflake_data():
     return cur
 
