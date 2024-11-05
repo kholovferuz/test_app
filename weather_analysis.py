@@ -81,7 +81,7 @@ class WeatherAnalysis:
             top_conditions = top_conditions.drop(columns=['RANK'])
     
             # sorting the DataFrame by city for readability
-            top_conditions = top_conditions.sort_values(by=['COUNT'])
+            top_conditions = top_conditions.sort_values(by=['COUNT'], ascending=False)
     
             return top_conditions
     
