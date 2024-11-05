@@ -77,6 +77,9 @@ class WeatherAnalysis:
             # filtering for only the most common weather condition per city (rank = 1)
             top_conditions = weather_counts[weather_counts['RANK'] == 1]
     
+            # dropping the 'RANK' column
+            top_conditions = top_conditions.drop(columns=['RANK'])
+    
             # sorting the DataFrame by city for readability
             top_conditions = top_conditions.sort_values(by=['CITY_NAME'])
     
@@ -84,6 +87,7 @@ class WeatherAnalysis:
     
         except Exception as e:
             return f"An error occurred: {str(e)}"
+
 
     # 3
     def average_temperature(self, filtered_df):
