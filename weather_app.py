@@ -1,6 +1,6 @@
 import streamlit as st
 from snowflake_connection import cur
-from pages import snowflake_tables, current_weather, weather_analysis
+from pages import snowflake_tables, current_weather, weather_analysis, show_dashboard
 from data_orchestration.dags.modules.api_calls import cities_list
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
@@ -41,13 +41,15 @@ def main():
     # creating a link for official documentation in sidebar
     st.sidebar.markdown('[Official documentation](http://app-documentation-demo.s3-website.eu-central-1.amazonaws.com/index.html)')
 
-    selected_page = st.sidebar.selectbox("Select a page", ["Current Weather","Weather Analysis", "Snowflake Tables"])
+    selected_page = st.sidebar.selectbox("Select a page", ["Current Weather","Weather Analysis", "Snowflake Tables", "Dashboard"])
     if selected_page == "Weather Analysis":
         weather_analysis(cur)
     elif selected_page=='Snowflake Tables':
         snowflake_tables(cur)
     elif selected_page == "Current Weather":
         current_weather(cities_list, os.getenv('API_KEY'), os.getenv('COUNTRY_CODE'))
+    elif selected_page == "Dashboard":
+        show_dashboard(cur)
     else:
         st.error("Invalid page selection.")
 
