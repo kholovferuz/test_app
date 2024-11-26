@@ -48,8 +48,8 @@ def main():
         snowflake_tables(cur)
     elif selected_page == "Current Weather":
         current_weather(cities_list, os.getenv('API_KEY'), os.getenv('COUNTRY_CODE'))
-    elif selected_page == "Dashboard":
-        show_dashboard(cur)
+    # elif selected_page == "Dashboard":
+    #     show_dashboard(cur)
     else:
         st.error("Invalid page selection.")
 
