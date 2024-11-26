@@ -253,10 +253,17 @@ def show_dashboard(cur):
         avg_temp = filtered_df.groupby('CITY_NAME')['TEMPERATURE'].mean().round(2).reset_index()
         fig, ax = plt.subplots(figsize=(10, 6))
         sns.barplot(data=avg_temp, x='CITY_NAME', y='TEMPERATURE', palette='viridis', ax=ax)
+
+        # adding temperature values on top of the bars
+        for index, row in avg_temp.iterrows():
+            ax.text(index, row['TEMPERATURE'] + 0.1, f"{row['TEMPERATURE']:.2f}", 
+                    ha='center', va='bottom', fontsize=10, color='black', weight='bold')
+
         ax.set_title("Average Temperature per City", fontsize=16)
         ax.set_ylabel("Temperature (°C)")
         ax.set_xlabel("City Name")
         ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
+
         st.pyplot(fig)
 
     # 2. Maximum Wind Speed per City
@@ -274,9 +281,16 @@ def show_dashboard(cur):
         max_wind_speed = filtered_df.groupby('CITY_NAME')['WIND_SPEED'].max().reset_index()
         fig, ax = plt.subplots(figsize=(10, 6))
         sns.barplot(data=max_wind_speed, x='WIND_SPEED', y='CITY_NAME', palette='coolwarm', ax=ax)
+
+        # adding wind speed values outside of the bars
+        for index, row in max_wind_speed.iterrows():
+            ax.text(row['WIND_SPEED'] + 0.2, index, f"{row['WIND_SPEED']:.2f}", 
+                    ha='left', va='center', fontsize=10, color='black', weight='bold')
+
         ax.set_title("Strongest Wind Speeds per City", fontsize=16)
         ax.set_xlabel("Wind Speed (m/s)")
         ax.set_ylabel("City Name")
+        
         st.pyplot(fig)
 
     # 4. Temperature Trends Over Time
