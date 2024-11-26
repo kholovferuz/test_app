@@ -3,6 +3,8 @@ from data_orchestration.dags.modules.api_calls import fetch_current_weather_data
 from weather_analysis import WeatherAnalysis
 import pandas as pd
 from datetime import datetime, timedelta
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 def snowflake_tables(cur):
     """
@@ -234,3 +236,79 @@ def weather_analysis(cur):
     for label, analysis_fn, df in analysis_tasks:
         result = analysis_fn(df) if df is not None else analysis_fn()
         display_result(result, label)
+        
+def show_dashboard(cur):
+    st.title("Visualizations based on weather data stored in the Snowflake database.")
+    
+    col1, col2=st.columns(2)
+    col3, col4=st.columns(2)
+    col5, col6=st.columns(2)
+    
+    filtered_df = fetch_denormalized_into_df(st,cur)
+
+    filtered_df["OBSERVATION_TIME"] = pd.to_datetime(filtered_df["OBSERVATION_TIME"])
+
+    # 1. Average Temperature per City
+    with col1:
+        avg_temp = filtered_df.groupby('CITY_NAME')['TEMPERATURE'].mean().round(2).reset_index()
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.barplot(data=avg_temp, x='CITY_NAME', y='TEMPERATURE', palette='viridis', ax=ax)
+        ax.set_title("Average Temperature per City", fontsize=16)
+        ax.set_ylabel("Temperature (°C)")
+        ax.set_xlabel("City Name")
+        ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
+        st.pyplot(fig)
+
+    # 2. Maximum Wind Speed per City
+    with col2:
+        weather_condition_counts = filtered_df['WEATHER_CONDITION'].value_counts().reset_index()
+        weather_condition_counts.columns = ['WEATHER_CONDITION', 'COUNT']
+        fig, ax = plt.subplots(figsize=(8, 8))
+        ax.pie(weather_condition_counts['COUNT'], labels=weather_condition_counts['WEATHER_CONDITION'], 
+            autopct='%1.1f%%', startangle=140, colors=sns.color_palette('pastel'))
+        ax.set_title("Weather Conditions Distribution", fontsize=16)
+        st.pyplot(fig)
+
+    # 3. Cloud Coverage Distribution
+    with col3:
+        max_wind_speed = filtered_df.groupby('CITY_NAME')['WIND_SPEED'].max().reset_index()
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.barplot(data=max_wind_speed, x='WIND_SPEED', y='CITY_NAME', palette='coolwarm', ax=ax)
+        ax.set_title("Strongest Wind Speeds per City", fontsize=16)
+        ax.set_xlabel("Wind Speed (m/s)")
+        ax.set_ylabel("City Name")
+        st.pyplot(fig)
+
+    # 4. Temperature Trends Over Time
+    with col4:
+        temp_trend = filtered_df[['OBSERVATION_TIME', 'TEMPERATURE']].sort_values('OBSERVATION_TIME')
+        fig, ax = plt.subplots(figsize=(12, 6))
+        sns.lineplot(data=temp_trend, x='OBSERVATION_TIME', y='TEMPERATURE', ax=ax, marker='o', color='blue')
+        ax.set_title("Temperature Trend Over Time", fontsize=16)
+        ax.set_ylabel("Temperature (°C)")
+        ax.set_xlabel("Time")
+        plt.xticks(rotation=45, ha='right')
+        st.pyplot(fig)
+
+    # 5. Rainy Days Comparison
+    with col5:
+        weather_metrics = filtered_df.groupby('CITY_NAME').agg(
+            AVG_TEMPERATURE=('TEMPERATURE', 'mean'),
+            AVG_HUMIDITY=('HUMIDITY', 'mean'),
+            AVG_WIND_SPEED=('WIND_SPEED', 'mean')
+        ).round(2)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.heatmap(weather_metrics.T, annot=True, fmt=".2f", cmap='YlGnBu', ax=ax)
+        ax.set_title("Weather Metrics Comparison", fontsize=16)
+        ax.set_xlabel("City Name")
+        st.pyplot(fig)
+
+    # 6. Day vs. Night Average Temperature
+    with col6:
+        fig, ax = plt.subplots(figsize=(12, 6))
+        sns.boxplot(data=filtered_df, x='CITY_NAME', y='TEMPERATURE', palette='muted', ax=ax)
+        ax.set_title("Temperature Variation by City", fontsize=16)
+        ax.set_ylabel("Temperature (°C)")
+        ax.set_xlabel("City Name")
+        ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
+        st.pyplot(fig)
