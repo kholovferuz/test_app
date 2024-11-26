@@ -41,7 +41,7 @@ def main():
     # creating a link for official documentation in sidebar
     st.sidebar.markdown('[Official documentation](http://app-documentation-demo.s3-website.eu-central-1.amazonaws.com/index.html)')
 
-    selected_page = st.sidebar.selectbox("Select a page", ["Current Weather","Weather Analysis", "Snowflake Tables", "Dashboard"])
+    selected_page = st.sidebar.selectbox("Select a page", ["Current Weather","Weather Analysis", "Snowflake Tables"])
     if selected_page == "Weather Analysis":
         weather_analysis(cur)
     elif selected_page=='Snowflake Tables':
